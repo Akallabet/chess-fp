@@ -1,0 +1,8 @@
+{
+  "*.+(js)": [
+    "npm run lint"
+  ],
+  "**/*.+(js|json)": [
+    "prettier --write"
+  ]
+}
