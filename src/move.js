@@ -5,6 +5,7 @@ import {
   removeCastlingColor,
   removeKingsideCastlingColor,
   removeQueensideCastlingColor,
+  buildFENPiecePlacementFromBoard,
 } from './helpers/fen'
 import * as SAN from './helpers/san'
 import {
@@ -27,6 +28,10 @@ import {
   extractKey,
   deplete,
   extractKeys,
+  log,
+  truthy,
+  falsy,
+  filter,
 } from 'eslambda'
 
 export const move =
@@ -121,7 +126,8 @@ export const move =
         y: activeColor === colors.w ? y + 1 : y - 1,
       })
 
-    const isThreefoldRepetition = pipe(
+    const checkIsThreefoldRepetition = pipe(
+      () => history,
       map(({ FENString }) => FENString.split(' ')[0]),
       (placements) => [...placements, FEN.piecePlacement],
       reduce((placements, placement) => {
@@ -134,8 +140,46 @@ export const move =
       isGreaterOrEqualThan(3)
     )
 
-    const setIsDraw = ({ isStaleMate }) =>
-      FEN.halfmoveClock === 100 || isStaleMate || isThreefoldRepetition(history)
+    const checkIsFiftyMovesRuleBroken = () => FEN.halfmoveClock === 100
+    const checkIsInsufficientMaterial = pipe(
+      () => board,
+      flatten,
+      filter(({ name }) => isTruthy(name)),
+      log('ha'),
+      pipeCond(
+        [
+          when(
+            (names) => names.length === 2,
+            (names) => names[0].name === 'K',
+            (names) => names[1].name === 'K'
+          ),
+          truthy,
+          identity,
+        ],
+        [truthy, falsy]
+      )
+      // reduce((moves, { name, origin }) => {
+      //   if (moves.find((move) => move.name === name && move.origin === origin)) return moves
+      //   return [...moves, { name, origin }]
+      // }, []),
+      // map(({ name }) => name),
+      // reduce((names, name) => {
+      //   if (!names[name]) names[name] = 0
+      //   names[name] += 1
+      //   return names
+      // }, {}),
+      // pipeCond([
+      //   ({K})=>K===2
+      // ]),
+      // falsy
+    )
+
+    const setIsDraw = ({
+      isStaleMate,
+      isFiftyMovesRuleBroken,
+      isThreefoldRepetition,
+      isInsufficientMaterial,
+    }) => isFiftyMovesRuleBroken || isStaleMate || isThreefoldRepetition || isInsufficientMaterial
 
     const setIsGameOver = ({ isStaleMate, isDraw, isCheckMate }) =>
       isStaleMate || isCheckMate || isDraw
@@ -166,7 +210,7 @@ export const move =
             ...destination.rook,
           }),
           updateBoard,
-          helpers.buildFENPiecePlacementFromBoard({ pieces, COLORS }),
+          buildFENPiecePlacementFromBoard({ pieces, COLORS }),
           updatePiecePlacement,
           disallowCastling,
           removeEnPassant
@@ -205,7 +249,7 @@ export const move =
           identity
         ),
         updateBoard,
-        helpers.buildFENPiecePlacementFromBoard({ pieces, COLORS }),
+        buildFENPiecePlacementFromBoard({ pieces, COLORS }),
         updatePiecePlacement,
         removeEnPassant,
         ifElse(when(isCastlingAvailable, hasKingMoved(destination)), disallowCastling, identity),
@@ -264,6 +308,12 @@ export const move =
             ),
             'isStaleMate'
           ),
+          (context) => ({
+            ...context,
+            isThreefoldRepetition: checkIsThreefoldRepetition(context),
+            isFiftyMovesRuleBroken: checkIsFiftyMovesRuleBroken(context),
+            isInsufficientMaterial: checkIsInsufficientMaterial(context),
+          }),
           enrichObject(setIsDraw, 'isDraw'),
           enrichObject(() => isTruthy(isInCheck), 'isInCheck'),
           enrichObject(() => isTruthy(isCheckMate), 'isCheckMate'),

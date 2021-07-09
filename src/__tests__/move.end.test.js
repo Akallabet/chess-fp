@@ -56,6 +56,7 @@ test('it should end the game with a draw if the 50 moves rule is broken', () => 
   })
 
   expect(state.isGameOver).toBeTruthy()
+  expect(state.isFiftyMovesRuleBroken).toBeTruthy()
   expect(state.isDraw).toBeTruthy()
 })
 
@@ -83,5 +84,12 @@ test('it should tell when a move has been repeated 3 times in a row', () => {
   expect(moves.isDraw).toBeFalsy()
 
   const { state } = pipe(move('Ng1'), move('Ng8'))(moves)
+  expect(state.isThreefoldRepetition).toBeTruthy()
   expect(state.isDraw).toBeTruthy()
+})
+
+test('it should end the game with a draw if there is insufficient material (K vs. K, K vs. KB, or K vs. KN)', () => {
+  const moves = pipe(start)({ FENString: '4k3/8/8/8/8/8/8/4K3 w - - 0 0' })
+  expect(moves.isInsufficientMaterial).toBeTruthy()
+  expect(moves.isDraw).toBeTruthy()
 })

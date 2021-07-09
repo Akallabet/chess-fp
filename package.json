@@ -46,6 +46,6 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "eslambda": "^0.1.1"
+    "eslambda": "^0.2.0"
   }
 }
