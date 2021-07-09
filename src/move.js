@@ -28,10 +28,6 @@ import {
   extractKey,
   deplete,
   extractKeys,
-  log,
-  truthy,
-  falsy,
-  filter,
 } from 'eslambda'
 
 export const move =
@@ -142,36 +138,14 @@ export const move =
 
     const checkIsFiftyMovesRuleBroken = () => FEN.halfmoveClock === 100
     const checkIsInsufficientMaterial = pipe(
-      () => board,
-      flatten,
-      filter(({ name }) => isTruthy(name)),
-      log('ha'),
-      pipeCond(
-        [
-          when(
-            (names) => names.length === 2,
-            (names) => names[0].name === 'K',
-            (names) => names[1].name === 'K'
-          ),
-          truthy,
-          identity,
-        ],
-        [truthy, falsy]
-      )
-      // reduce((moves, { name, origin }) => {
-      //   if (moves.find((move) => move.name === name && move.origin === origin)) return moves
-      //   return [...moves, { name, origin }]
-      // }, []),
-      // map(({ name }) => name),
-      // reduce((names, name) => {
-      //   if (!names[name]) names[name] = 0
-      //   names[name] += 1
-      //   return names
-      // }, {}),
-      // pipeCond([
-      //   ({K})=>K===2
-      // ]),
-      // falsy
+      () => FEN,
+      ({ piecePlacement }) =>
+        piecePlacement
+          .replace(/[12345678/]/g, '')
+          .split('')
+          .sort()
+          .join(''),
+      (str) => str === 'Kk' || str === 'BKk' || str === 'KNk'
     )
 
     const setIsDraw = ({
