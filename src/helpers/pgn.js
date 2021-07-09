@@ -24,12 +24,15 @@ const buildHeaders = ({ constants: { HEADERS }, pgn: { headers = [] } }) =>
 
 const headerToString = ([header, value]) => `[${header} "${value || '-'}"]`
 const buildHeadersStringArray = map(headerToString)
-const toString = ({ headers }) => {
-  const data = {
+
+const toString = pipe(
+  ({ headers }) => ({
     headers: buildHeadersStringArray(headers),
-  }
-  return (newLine = '/n') => data.headers.join(newLine)
-}
+  }),
+  ({ headers }) =>
+    (newLine = '/n') =>
+      headers.join(newLine)
+)
 
 const buildPGNState = ({ state: { pgn } }) => pgn || {}
 

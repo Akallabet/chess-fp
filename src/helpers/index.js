@@ -1,8 +1,12 @@
 import { hasKey, ifElse, isTruthy, when } from 'eslambda'
 
-export { movePiece, addPieceToBoard, removePieceFromBoard, cleanBoard } from './board'
-export { buildBoardFromFEN } from './build-board-from-FEN'
-export { buildFENPiecePlacementFromBoard } from './buils-FEN-piece-placement-from-board'
+export {
+  movePiece,
+  addPieceToBoard,
+  removePieceFromBoard,
+  cleanBoard,
+  buildBoardFromFEN,
+} from './board'
 export {
   generateLegalMoves,
   getOrigins,

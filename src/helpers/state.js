@@ -18,10 +18,25 @@ const createNewHistory = ({
   FENString,
   isCheckMate = false,
   isStaleMate = false,
+  isThreefoldRepetition = false,
+  isFiftyMovesRuleBroken = false,
+  isInsufficientMaterial = false,
   isDraw = false,
   isInCheck = false,
   isGameOver = false,
-}) => [{ FENString, isCheckMate, isStaleMate, isInCheck, isDraw, isGameOver }]
+}) => [
+  {
+    FENString,
+    isCheckMate,
+    isStaleMate,
+    isInCheck,
+    isThreefoldRepetition,
+    isFiftyMovesRuleBroken,
+    isInsufficientMaterial,
+    isDraw,
+    isGameOver,
+  },
+]
 
 export const buildState = pipe(
   enrichObject(initializeState, 'state'),
@@ -41,6 +56,9 @@ export const buildState = pipe(
     'legalMoves',
     'isStaleMate',
     'isCheckMate',
+    'isThreefoldRepetition',
+    'isFiftyMovesRuleBroken',
+    'isInsufficientMaterial',
     'isDraw',
     'isInCheck',
     'isGameOver',

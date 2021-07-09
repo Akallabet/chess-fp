@@ -242,6 +242,3 @@ test('it should promote the pawn to queen', () => {
   })
   expect(state.FENString).toEqual('2Q5/8/8/8/8/8/8/8 b KQkq - 0 1')
 })
-test.todo(
-  'it should end the game with a draw if there is insufficient material (K vs. K, K vs. KB, or K vs. KN)'
-)
