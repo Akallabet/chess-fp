@@ -31,6 +31,7 @@ test('it should expose the history of all the moves', () => {
       isDraw: false,
       isInCheck: false,
       isGameOver: false,
+      move: 'b3',
     },
     {
       FENString: 'rnbqkbnr/pp1ppppp/2p5/8/8/1P6/P1PPPPPP/RNB1K1NR w KQkq - 0 2',
@@ -42,6 +43,7 @@ test('it should expose the history of all the moves', () => {
       isDraw: false,
       isInCheck: false,
       isGameOver: false,
+      move: 'c6',
     },
   ])
 })
@@ -102,6 +104,7 @@ test('it should undo one move and override the last one with a new move', () => 
       isDraw: false,
       isInCheck: false,
       isGameOver: false,
+      move: 'b3',
     },
     {
       FENString: 'rnbqkbnr/pp1ppppp/8/2p5/8/1P6/P1PPPPPP/RNB1K1NR w KQkq c6 0 2',
@@ -113,6 +116,7 @@ test('it should undo one move and override the last one with a new move', () => 
       isDraw: false,
       isInCheck: false,
       isGameOver: false,
+      move: 'c5',
     },
   ])
 })

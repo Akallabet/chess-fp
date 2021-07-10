@@ -1,4 +1,4 @@
-import { enrichObject, extractKeys, map, pipe } from 'eslambda'
+import { enrichObject, extractKeys, join, map, pipe, reduce } from 'eslambda'
 
 export const byHeader =
   (HEADERS) =>
@@ -17,26 +17,42 @@ const buildHeaders = ({ constants: { HEADERS }, pgn: { headers = [] } }) =>
     byHeader(HEADERS)
   )
 
-const headerToString = ([header, value]) => `[${header} "${value || '-'}"]`
+const headerToString = ([header, value]) => `[${header} "${value || '?'}"]`
 const buildHeadersStringArray = map(headerToString)
 
-// const buildMoves = (context) =>
+const buildMoves = pipe(
+  ({ state: { history = [] } }) => history.slice(1),
+  map(({ move }) => move),
+  reduce(
+    (fullMoves, move, index) =>
+      index % 2 === 0
+        ? [...fullMoves, [move]]
+        : [...fullMoves.slice(0, fullMoves.length - 1), [fullMoves[fullMoves.length - 1][0], move]],
+    []
+  )
+)
+
+const buildMovesString = pipe(
+  map(([first, second = ''], index) => `${index + 1}. ${first} ${second}`),
+  join(' ')
+)
 
 const toString = pipe(
-  ({ headers }) => ({
+  ({ headers, moves }) => ({
     headers: buildHeadersStringArray(headers),
+    moves: buildMovesString(moves),
   }),
-  ({ headers }) =>
+  ({ headers, moves }) =>
     (newLine = '/n') =>
-      headers.join(newLine)
+      `${headers.join(newLine)}${newLine}${newLine}${moves}`
 )
 
 const buildPGNState = ({ state: { pgn } }) => pgn || {}
 
 export const generatePGN = pipe(
   enrichObject(buildPGNState, 'pgn'),
-  // log('state'),
+  enrichObject(buildMoves, 'moves'),
   enrichObject(buildHeaders, 'headers'),
   enrichObject(toString, 'toString'),
-  extractKeys(['headers', 'toString'])
+  extractKeys(['headers', 'moves', 'toString'])
 )

@@ -17,7 +17,7 @@ test('it should return all the default PGN headers', () => {
     ['Black', ''],
   ])
   expect(state.pgn.toString()).toEqual(
-    '[Event "-"]/n[Site "-"]/n[Date "-"]/n[Round "-"]/n[Result "-"]/n[White "-"]/n[Black "-"]'
+    '[Event "?"]/n[Site "?"]/n[Date "?"]/n[Round "?"]/n[Result "?"]/n[White "?"]/n[Black "?"]/n/n'
   )
 })
 
@@ -44,7 +44,7 @@ test('it should return a custom set of PGN headers', () => {
     ['BlackELO', ''],
   ])
   expect(state.pgn.toString()).toEqual(
-    '[Event "-"]/n[Site "-"]/n[Date "-"]/n[Round "-"]/n[Result "-"]/n[White "-"]/n[Black "-"]/n[WhiteELO "-"]/n[BlackELO "-"]'
+    '[Event "?"]/n[Site "?"]/n[Date "?"]/n[Round "?"]/n[Result "?"]/n[White "?"]/n[Black "?"]/n[WhiteELO "?"]/n[BlackELO "?"]/n/n'
   )
 })
 
@@ -70,11 +70,11 @@ test('it should add data to one or more headers', () => {
     ['Black', ''],
   ])
   expect(state.pgn.toString()).toEqual(
-    '[Event "Practice match"]/n[Site "The internet"]/n[Date "10-10-2020"]/n[Round "-"]/n[Result "-"]/n[White "-"]/n[Black "-"]'
+    '[Event "Practice match"]/n[Site "The internet"]/n[Date "10-10-2020"]/n[Round "?"]/n[Result "?"]/n[White "?"]/n[Black "?"]/n/n'
   )
 })
 
-test.skip('it should return all the moves in pgn format', () => {
+test('it should return all the moves in pgn format', () => {
   const { state } = pipe(
     start,
     move('b3'),
@@ -89,4 +89,8 @@ test.skip('it should return all the moves in pgn format', () => {
     ['b3', 'c6'],
     ['a3', 'd5'],
   ])
+
+  expect(state.pgn.toString()).toEqual(
+    '[Event "?"]/n[Site "?"]/n[Date "?"]/n[Round "?"]/n[Result "?"]/n[White "?"]/n[Black "?"]/n/n1. b3 c6 2. a3 d5'
+  )
 })

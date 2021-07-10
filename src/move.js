@@ -296,6 +296,7 @@ export const move =
             pipe(changeTurn, ifElse(isWhiteTurn, incrementFullmove), createNewFENString),
             'FENString'
           ),
+          enrichObject(() => input, 'move'),
           enrichObject(
             pipe(deplete('legalMoves'), (state) => [
               ...history.slice(0, current + 1),

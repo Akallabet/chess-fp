@@ -1,6 +1,6 @@
 {
   "name": "chess-fp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Functional programming javascript library to play chess (no UI, just the logic)",
   "main": "./dist/index.js",
   "scripts": {
@@ -46,6 +46,6 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "eslambda": "^1.0.0"
+    "eslambda": "^1.2.0"
   }
 }
