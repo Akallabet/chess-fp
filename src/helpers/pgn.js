@@ -2,16 +2,11 @@ import { enrichObject, extractKeys, map, pipe } from 'eslambda'
 
 export const byHeader =
   (HEADERS) =>
-  ([headerA], [headerB]) => {
-    const indexA = HEADERS.indexOf(headerA)
-    const indexB = HEADERS.indexOf(headerB)
-
-    if (indexA === -1 && indexB === -1) return headerB - headerA
-    if (indexA === -1) return 1
-    if (indexB === -1) return -1
-
-    return headerB - headerA
-  }
+  ([headerA], [headerB]) =>
+    (HEADERS.indexOf(headerA) === -1 && HEADERS.indexOf(headerB) === -1 && headerB - headerA) ||
+    (HEADERS.indexOf(headerA) === -1 && 1) ||
+    (HEADERS.indexOf(headerB) === -1 && -1) ||
+    headerB - headerA
 
 const headerToArray = (header) => [header, '']
 const buildHeadersArray = map(headerToArray)
@@ -24,6 +19,8 @@ const buildHeaders = ({ constants: { HEADERS }, pgn: { headers = [] } }) =>
 
 const headerToString = ([header, value]) => `[${header} "${value || '-'}"]`
 const buildHeadersStringArray = map(headerToString)
+
+// const buildMoves = (context) =>
 
 const toString = pipe(
   ({ headers }) => ({
@@ -38,6 +35,7 @@ const buildPGNState = ({ state: { pgn } }) => pgn || {}
 
 export const generatePGN = pipe(
   enrichObject(buildPGNState, 'pgn'),
+  // log('state'),
   enrichObject(buildHeaders, 'headers'),
   enrichObject(toString, 'toString'),
   extractKeys(['headers', 'toString'])
