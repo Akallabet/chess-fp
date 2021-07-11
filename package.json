@@ -1,8 +1,12 @@
 {
   "name": "chess-fp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Functional programming javascript library to play chess (no UI, just the logic)",
   "main": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Akallabet/chess-fp.git"
+  },
   "scripts": {
     "lint": "eslint src --ext .js -c .eslintrc",
     "prettier": "prettier src/**/*.js",
