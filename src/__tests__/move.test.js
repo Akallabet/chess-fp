@@ -3,7 +3,6 @@ import { pipe } from 'eslambda'
 
 const empty = {}
 const emptyRow = [...Array(8)].map(() => empty)
-const emptyBoard = [...Array(8)].map(() => emptyRow)
 
 const completeBoard = [
   [
@@ -33,62 +32,6 @@ const completeBoard = [
     { name: 'R', color: 'w' },
   ],
 ]
-
-const boardWithBlackPawn = [
-  [empty, empty, empty, empty, empty, empty, empty, empty],
-  [empty, empty, { name: 'P', color: 'b' }, empty, empty, empty, empty, empty],
-  ...emptyBoard.slice(2, 8),
-]
-
-test('it should return an empty board', () => {
-  const {
-    state: { board, FENString },
-  } = start({ FENString: '8/8/8/8/8/8/8/8 w KQkq - 0 1' })
-  expect(board).toEqual(emptyBoard)
-  expect(FENString).toEqual('8/8/8/8/8/8/8/8 w KQkq - 0 1')
-})
-
-test('it should return a board with a black pawn in second row, third column', () => {
-  const {
-    state: { board, FENString },
-  } = start({ FENString: '8/2p5/8/8/8/8/8/8 w KQkq - 0 1' })
-  expect(board).toEqual(boardWithBlackPawn)
-  expect(FENString).toEqual('8/2p5/8/8/8/8/8/8 w KQkq - 0 1')
-})
-
-test('it should return a board with two black pawn in second row', () => {
-  const {
-    state: { board, FENString },
-  } = start({
-    FENString: '8/2p1p3/8/8/8/8/8/8 w KQkq - 0 1',
-  })
-  expect(board).toEqual([
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [
-      empty,
-      empty,
-      { name: 'P', color: 'b' },
-      empty,
-      { name: 'P', color: 'b' },
-      empty,
-      empty,
-      empty,
-    ],
-    ...emptyBoard.slice(2, 8),
-  ])
-  expect(FENString).toEqual('8/2p1p3/8/8/8/8/8/8 w KQkq - 0 1')
-})
-
-test('it should return a board with all the standard pieces', () => {
-  const {
-    state: { board, FENString },
-  } = start({
-    FENString: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-  })
-
-  expect(board).toEqual(completeBoard)
-  expect(FENString).toEqual('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
-})
 
 test('it should move white pawn c2 to c4', () => {
   const {
@@ -241,4 +184,51 @@ test('it should promote the pawn to queen', () => {
     FENString: '8/2P5/8/8/8/8/8/8 w KQkq - 0 1',
   })
   expect(state.FENString).toEqual('2Q5/8/8/8/8/8/8/8 b KQkq - 0 1')
+})
+
+test('it should expose the history of all the moves', () => {
+  const { state } = pipe(
+    start,
+    move('b3'),
+    move('c6')
+  )({
+    FENString: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNB1K1NR w KQkq - 0 1',
+  })
+  expect(state.history).toEqual([
+    {
+      FENString: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNB1K1NR w KQkq - 0 1',
+      isCheckMate: false,
+      isStaleMate: false,
+      isThreefoldRepetition: false,
+      isFiftyMovesRuleBroken: false,
+      isInsufficientMaterial: false,
+      isDraw: false,
+      isInCheck: false,
+      isGameOver: false,
+    },
+    {
+      FENString: 'rnbqkbnr/pppppppp/8/8/8/1P6/P1PPPPPP/RNB1K1NR b KQkq - 0 1',
+      isCheckMate: false,
+      isStaleMate: false,
+      isThreefoldRepetition: false,
+      isFiftyMovesRuleBroken: false,
+      isInsufficientMaterial: false,
+      isDraw: false,
+      isInCheck: false,
+      isGameOver: false,
+      move: 'b3',
+    },
+    {
+      FENString: 'rnbqkbnr/pp1ppppp/2p5/8/8/1P6/P1PPPPPP/RNB1K1NR w KQkq - 0 2',
+      isCheckMate: false,
+      isStaleMate: false,
+      isThreefoldRepetition: false,
+      isFiftyMovesRuleBroken: false,
+      isInsufficientMaterial: false,
+      isDraw: false,
+      isInCheck: false,
+      isGameOver: false,
+      move: 'c6',
+    },
+  ])
 })

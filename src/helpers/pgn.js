@@ -22,18 +22,23 @@ const buildHeadersStringArray = map(headerToString)
 
 const buildMoves = pipe(
   ({ state: { history = [] } }) => history.slice(1),
-  map(({ move }) => move),
+  map(({ move, comment = '' }) => [move, comment]),
   reduce(
-    (fullMoves, move, index) =>
+    (fullMoves, [move, comment], index) =>
       index % 2 === 0
-        ? [...fullMoves, [move]]
-        : [...fullMoves.slice(0, fullMoves.length - 1), [fullMoves[fullMoves.length - 1][0], move]],
+        ? [...fullMoves, [[move, comment]]]
+        : [
+            ...fullMoves.slice(0, fullMoves.length - 1),
+            [fullMoves[fullMoves.length - 1][0], [move, comment]],
+          ],
     []
   )
 )
 
+const pgnMove = ([SAN, comment] = ['', '']) => `${SAN || ''}${comment ? ` {${comment}}` : ''}`
+
 const buildMovesString = pipe(
-  map(([first, second = ''], index) => `${index + 1}. ${first} ${second}`),
+  map(([first, second], index) => `${index + 1}. ${pgnMove(first)} ${pgnMove(second)}`),
   join(' ')
 )
 
