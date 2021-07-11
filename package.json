@@ -1,6 +1,6 @@
 {
   "name": "chess-fp",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Functional programming javascript library to play chess (no UI, just the logic)",
   "main": "./dist/index.js",
   "scripts": {
@@ -8,11 +8,11 @@
     "prettier": "prettier src/**/*.js",
     "lint:fix": "eslint src --ext .js -c .eslintrc --fix",
     "test": "jest --watch --maxWorkers=25%",
-    "test:cli": "jest --maxWorkers=50%",
-    "build:es": "BABEL_ENV=es babel src --out-dir dist --ignore 'src/**/*test.js'",
-    "build:cjs": "BABEL_ENV=cjs babel src --out-dir cjs --ignore 'src/**/*test.js'",
+    "test:ci": "jest --collect-coverage --maxWorkers=50%",
+    "build:es": "BABEL_ENV=es babel src --out-dir dist --ignore 'src/**/*.test.js'",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir cjs --ignore 'src/**/*.test.js'",
     "build": "npm run build:es && npm run build:cjs",
-    "clean": "rimraf dist/*",
+    "clean": "rimraf dist cjs",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "files": [
