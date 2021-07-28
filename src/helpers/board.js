@@ -24,7 +24,7 @@ export const removePieceFromBoard =
 export const movePiece = (piece = { name: '', color: '', y: 0, x: 0 }, origin, destination) =>
   pipe(removePieceFromBoard(origin), addPieceToBoard({ ...piece, ...destination }))
 
-const isValidSquare = (_, square) => isNumber(square)
+const isValidSquare = (_, square) => isNumber(parseInt(square))
 const addEmptyCells = (row, square) => [...row, ...[...Array(Number(square))].map(() => ({}))]
 
 const addCellBoardInfo =

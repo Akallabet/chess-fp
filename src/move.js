@@ -24,7 +24,7 @@ import {
   reduce,
   max,
   isGreaterOrEqualThan,
-  extractValues,
+  getValues,
   extractKey,
   deplete,
   extractKeys,
@@ -131,7 +131,7 @@ export const move =
         placements[placement] += 1
         return placements
       }, {}),
-      extractValues,
+      getValues,
       max,
       isGreaterOrEqualThan(3)
     )
