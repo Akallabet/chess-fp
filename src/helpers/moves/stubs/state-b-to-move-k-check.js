@@ -1,5 +1,3 @@
-import { rules } from '../../rules'
-
 export default {
   FENString: 'rnbqkbnr/ppp1p1pp/5p2/3p4/Q2P4/2P5/PP2PPPP/RNB1KBNR b KQkq - 0 3',
   constants: {
@@ -25,7 +23,6 @@ export default {
       Q: 'Q',
       K: 'K',
     },
-    rules,
   },
   state: {
     current: 0,

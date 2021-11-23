@@ -1,3 +1,5 @@
+import { rules } from '../rules'
+
 const isWithinBoard = (board, { y, x }) => board[y] && board[y][x]
 const isValidStep =
   (board) =>
@@ -45,13 +47,8 @@ const buildValidateCheck =
     return hasCheck ? { ...position, check: true } : position
   }
 
-export const generatePieceMoves = (context) => {
-  const {
-    constants: { rules },
-    position,
-    board,
-    activeColor,
-  } = context
+export const generatePieceMoves = (context) => () => {
+  const { position, board, activeColor } = context
 
   const validateCheck = buildValidateCheck({ board, isValid: isValidCheck(context) })
 

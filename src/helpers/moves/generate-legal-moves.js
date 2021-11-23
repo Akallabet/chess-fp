@@ -51,8 +51,6 @@ const addLegalMove =
       ...move,
     })
 
-const getPieceMoves = (context) => (args) => generatePieceMoves({ ...context, ...args })
-
 const generateInitialLegalMoves = ({ board, ...context }) => {
   const legalMoves = initializeLegalMoves(board)
   pipe(
@@ -60,7 +58,7 @@ const generateInitialLegalMoves = ({ board, ...context }) => {
       ifElse(
         isActiveColorPiece(context),
         pipe(
-          getPieceMoves({
+          generatePieceMoves({
             ...context,
             board,
             name,
